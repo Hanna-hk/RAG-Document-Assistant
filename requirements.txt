@@ -3,4 +3,4 @@ PyPDF2
 sentence-transformers
 supabase
 python-dotenv
-google-generativeai
+groq
