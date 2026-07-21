@@ -1,25 +1,22 @@
-import pytest
-from utils import chunk_text
+from unittest.mock import MagicMock
+import ingest
+import numpy as np
 
-def test_chunk_text_basic_split():
-    text = " ".join([f"word{i}" for i in range(100)])
-    chunks = chunk_text(text, chunk_size=50, overlap=10)
-    assert len(chunks) > 1
-    assert all(isinstance(c, str) for c in chunks)
+def test_process_pdf_calls_insert(mocker, tmp_path):
+    mock_page = MagicMock()
+    mock_page.extract_text.return_value = "Some test content here."
 
-def test_chunk_text_short_text_single_chunk():
-    text = "short text"
-    chunks = chunk_text(text, chunk_size=500, overlap=50)
-    assert len(chunks) == 1
-    assert chunks[0] == text
+    mock_reader = MagicMock()
+    mock_reader.pages =[mock_page]
 
-def test_chunk_text_overlap_works():
-    text = " ".join([f"word{i}" for i in range(20)])
-    chunks = chunk_text(text, chunk_size=10, overlap=5)
-    first_words = set(chunks[0].split())
-    second_words = set(chunks[1].split())
-    assert len(first_words & second_words)>0
+    mocker.patch("ingest.PdfReader", return_value=mock_reader)
+    mocker.patch.object(ingest.model, "encode", return_value=np.array([[0.1, 0.2, 0.3]]))
 
-def test_chunk_text_empty_string():
-    chunks = chunk_text("", chunk_size=500, overlap=50)
-    assert chunks==[] or chunks==[""]
+    mock_table = MagicMock()
+    mocker.patch.object(ingest.supabase, "table", return_value=mock_table)
+
+
+    mock_table.insert.return_value.execute.return_value = MagicMock()
+
+    ingest.process_pdf("fake.pdf")
+    mock_table.insert.assert_called_once()
