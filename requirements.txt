@@ -4,3 +4,5 @@ sentence-transformers
 supabase
 python-dotenv
 groq
+pytest
+pytest-mock
