@@ -18,12 +18,15 @@ def chunk_text(text, chunk_size=500, overlap=50):
     return chunks
 
 def process_pdf(filepath):
+    filename = os.path.basename(filepath)
+
+    supabase.table("documents").delete().eq("metadata->>source", filename).execute()
     reader = PdfReader(filepath)
     full_text = ""
     for page in reader.pages:
         full_text += page.extract_text() + "\n"
 
-    chunks = chunk_text(full_text)
+    chunks = chunk_text(full_text.replace("\x00", ""))
     embeddings = model.encode(chunks).tolist()
     rows = [
         {

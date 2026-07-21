@@ -11,11 +11,14 @@ model = SentenceTransformer("all-MiniLM-L6-v2")
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 def search_context(query, match_count=5, threshold=0.3):
+    response = supabase.table("documents").select("*", count="exact").execute()
+    total_rows = response.count
+    print(total_rows)
     query_embedding = model.encode([query])[0].tolist()
     response = supabase.rpc("match_documents", {
         "query_embedding": query_embedding,
         "match_threshold": threshold,
-        "match_count": match_count
+        "match_count": match_count if match_count < total_rows else total_rows
     }).execute()
     return response.data
 
