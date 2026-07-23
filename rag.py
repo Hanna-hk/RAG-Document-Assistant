@@ -11,6 +11,26 @@ model = SentenceTransformer("all-MiniLM-L6-v2")
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 def search_context(query, match_count=5, threshold=0.3):
+    """
+        Find the most semantically relevant document chunks for a given query.
+
+        Encodes the query into an embedding and performs a similarity search
+        against the "documents" table in Supabase.
+
+        Args:
+            query (str): The natural-language question or search text.
+            match_count (int, optional): Maximum number of matching chunks to
+                return. Defaults to 5. Automatically capped at the total number
+                of documents stored, if fewer exist.
+            threshold (float, optional): Minimum similarity score (0-1) a chunk
+                must meet to be considered a match. Defaults to 0.3.
+
+        Returns:
+            list[dict]: A list of matching document chunks, each containing at
+                least "content", "metadata" (with a "source" filename), and a
+                "similarity" score. Returns an empty list if no documents are
+                stored or no matches meet the threshold.
+        """
     response = supabase.table("documents").select("*", count="exact").execute()
     total_rows = response.count
     print(total_rows)

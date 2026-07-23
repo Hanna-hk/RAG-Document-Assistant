@@ -1,12 +1,12 @@
 import pytest
 from unittest.mock import MagicMock, patch
 
-from proto.marshal.compat import message
 
 import rag
 import numpy as np
 
 def test_search_context_returns_matches(mocker):
+    """Verify search_context returns matches from the mocked Supabase RPC call."""
     mock_encode = mocker.patch.object(rag.model, "encode")
     mock_encode.return_value = np.array([[0.1, 0.2, 0.3]])
     mock_response = MagicMock()
@@ -20,12 +20,14 @@ def test_search_context_returns_matches(mocker):
     assert result[0]["metadata"]["source"] == "test.pdf"
 
 def test_generate_answer_no_matches_returns_empty(mocker):
+    """Verify generate_answer returns a fallback message when no context is found."""
     mocker.patch.object(rag, "search_context", return_value=[])
     answer, sources = rag.generate_answer("random question")
     assert sources == []
     assert "no information" in answer.lower()
 
 def test_generate_answer_with_matches_calls_llm(mocker):
+    """Verify generate_answer calls the LLM with retrieved context and returns its answer."""
     fake_matches = [
         {"content": "NovaLeaf was founded in 2018", "metadata": {"source": "example.pdf"}, "similarity": 0.9}
     ]
