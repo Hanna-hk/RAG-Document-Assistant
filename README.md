@@ -29,14 +29,18 @@ A Streamlit web application that lets you upload PDF documents and ask natural-l
 
 ```
 .
-├── app.py            # Streamlit UI: file upload + question answering
-├── ingest.py          # PDF parsing, chunking, embedding, and storage
-├── rag.py             # Retrieval + LLM-based answer generation
-├── utils.py           # Text chunking utility
-├── test_ingest.py      # Unit tests for ingestion pipeline
-├── test_rag.py         # Unit tests for retrieval and answer generation
-├── test_utils.py       # Unit tests for text chunking
-└── requirements.txt
+├── app.py                  # Streamlit UI: file upload + question answering
+├── ingest.py               # PDF parsing, chunking, embedding, and storage
+├── rag.py                  # Retrieval + LLM-based answer generation
+├── utils.py                # Text chunking utility
+├── tests/
+│   ├── __init__.py
+│   ├── test_ingest.py      # Unit tests for ingestion pipeline
+│   ├── test_rag.py         # Unit tests for retrieval and answer generation
+│   └── test_utils.py       # Unit tests for text chunking
+├── requirements.txt
+├── .env                    # Environment variables (not committed)
+└── .gitignore
 ```
 
 ## How It Works
