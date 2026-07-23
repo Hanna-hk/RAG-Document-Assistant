@@ -4,7 +4,7 @@ A Streamlit web application that lets you upload PDF documents and ask natural-l
 
 ## Demo
 
-<video src="[https://github.com/user-attachments/assets/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx](https://github.com/user-attachments/assets/7254453c-7483-4cdc-b295-4175e724bb8c)" controls width="700"></video>
+<video src="https://github.com/user-attachments/assets/7254453c-7483-4cdc-b295-4175e724bb8c" controls width="700"></video>
 
 ## Features
 
